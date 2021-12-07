@@ -1,1 +1,9 @@
-lake
+# virtualenv generated files #
+##############################
+Scripts
+Lib
+Include
+
+# virtualenv folders #
+######################
+env
