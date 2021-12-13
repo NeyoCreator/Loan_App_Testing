@@ -1,0 +1,2 @@
+In this Branch we will focus on connectiong the bankstatement function
+to the Aplication.
