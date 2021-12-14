@@ -23,5 +23,6 @@ class Profile(models.Model):
 
 
 #model 2
-class Bank_details(models.Model):
-    statement_title = models.FileField(upload_to='documents/%', default=True)
+class BankStatement(models.Model):
+    docfile = models.FileField(upload_to='documents/%Y/%m/%d', default=True)
+    #docfile = models.FileField(upload_to='documents/%Y/%m/%d')

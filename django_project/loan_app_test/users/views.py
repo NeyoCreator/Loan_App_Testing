@@ -2,12 +2,13 @@ from django.shortcuts import render, redirect
 from django.contrib import messages  
 from django.contrib.auth.decorators import login_required
 
-from users.models import Bank_details
 from .forms import UserRegisterForm , UserUpdateForm, ProfileUpdateForm 
-from .forms import BankDetailsForm
-from .models import Bank_details
+from users.forms import BankDetailsForm
+from users.models import BankStatement
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.shortcuts import render
+from django.template import RequestContext
 
 
 #1. Register
@@ -24,27 +25,29 @@ def register(request):
     return render(request, 'users/register.html', {'form': form})
 
 
-def banks_statement(request):
+def bankstatement(request):
     # Handle file upload
     if request.method == 'POST':
         form = BankDetailsForm(request.POST, request.FILES)
         if form.is_valid():
-            newdoc = Bank_details(docfile = request.FILES['docfile'])
+            newdoc = BankStatement(docfile = request.FILES['docfile'])
             newdoc.save()
 
             # Redirect to the document list after POST
 
-            return HttpResponseRedirect(reverse('users.views.bank_statement'))
+            #return HttpResponseRedirect(reverse('users.views.bankstatement'))
+            redirect('login')
     else:
         form = BankDetailsForm() # A empty, unbound form
 
     # Load documents for the list page
-    documents = Bank_details.objects.all()
+    documents = BankStatement.objects.all()
 
     # Render list page with the documents and the form
-    return render (request,'users/bank_statement.html')
-    # return render (request,'users/bank_statement.html')
-
+    return render(request,
+        'users/bank_statement.html',
+        {'documents': documents, 'form': form}
+    )
 
 @login_required
 def profile(request):
