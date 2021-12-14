@@ -1,23 +1,30 @@
-{% extends "blog/base.html" %}
-{% load crispy_forms_tags %}
-{% block content%}
-    <div class = "content-section">
-        <form method="POST">
-            {% csrf_token %}
-            <fieldset class = "form-group">
-                <legend class = "border-bottom mb-4" >Upload Bankstatement</legend>
-                {{ form|crispy }}
-            </fieldset>
-            <div class= "form-group">
-                <button class = "btn btn-outline-info" type="submit" >Sign Up</button>
-
-            </div>
-        </form>
-        <div class="border-top pt-3">
-            <small class= "text-muted">
-                Already have an account? <a class = "ml-2" href="{% url 'login' %}"">Sign In </a>
-            </small>
-
-        </div>
-    </div>
-{% endblock content %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Minimal Django File Upload Example</title>   
+    </head>
+    <body>
+    <!-- List of uploaded documents -->
+    {% if documents %}
+        <ul>
+        {% for document in documents %}
+            <li><a href="{{ document.docfile.url }}">{{ document.docfile.name }}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No documents.</p>
+    {% endif %}
+    <!-- Upload form. Note enctype attribute! -->
+    <form  action="{% url 'bank_statement' %}" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <p>{{ form.non_field_errors }}</p>
+      <p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p>
+      <p>
+          {{ form.docfile.errors }}
+          {{ form.docfile }}
+      </p>
+      <p><input type="submit" value="Upload" /></p>
+  </form>
+</body>
+</html>

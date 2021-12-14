@@ -1,10 +1,16 @@
 from django.shortcuts import render, redirect  
 from django.contrib import messages  
 from django.contrib.auth.decorators import login_required
+
+from users.models import Bank_details
 from .forms import UserRegisterForm , UserUpdateForm, ProfileUpdateForm 
+from .forms import BankDetailsForm
+from .models import Bank_details
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 
-
+#1. Register
 def register(request):
     if request.method == "POST":
         form = UserRegisterForm(request.POST)
@@ -16,6 +22,29 @@ def register(request):
     else :
         form = UserRegisterForm()
     return render(request, 'users/register.html', {'form': form})
+
+
+def banks_statement(request):
+    # Handle file upload
+    if request.method == 'POST':
+        form = BankDetailsForm(request.POST, request.FILES)
+        if form.is_valid():
+            newdoc = Bank_details(docfile = request.FILES['docfile'])
+            newdoc.save()
+
+            # Redirect to the document list after POST
+
+            return HttpResponseRedirect(reverse('users.views.bank_statement'))
+    else:
+        form = BankDetailsForm() # A empty, unbound form
+
+    # Load documents for the list page
+    documents = Bank_details.objects.all()
+
+    # Render list page with the documents and the form
+    return render (request,'users/bank_statement.html')
+    # return render (request,'users/bank_statement.html')
+
 
 @login_required
 def profile(request):
@@ -38,8 +67,6 @@ def profile(request):
         'u_form':u_form,
         'p_form': p_form
     }
-
-
 
     return render(request, 'users/profile.html', context)
 

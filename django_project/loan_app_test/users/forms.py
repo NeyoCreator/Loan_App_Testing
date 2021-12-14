@@ -2,7 +2,8 @@ from django import forms
 from django.contrib.auth.models import User
 
 from django.contrib.auth.forms import UserCreationForm
-from .models import Profile 
+from django.forms import fields
+from .models import Profile,Bank_details
 
 class UserRegisterForm(UserCreationForm):
      email =  forms.EmailField()
@@ -27,3 +28,7 @@ class ProfileUpdateForm(forms.ModelForm):
          model = Profile
          fields = ['image']
 
+
+
+class BankDetailsForm(forms.Form):
+    docfile  = forms.FileField(label = 'Select a file',help_text= 'max. 42 megabytes')
